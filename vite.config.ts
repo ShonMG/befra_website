@@ -32,9 +32,11 @@ export default defineConfig({
     fs: {
       strict: false,
     },
+    allowedHosts: ["befra-website.onrender.com"],
   },
   preview: {
     port,
     host: "0.0.0.0",
+    allowedHosts: ["befra-website.onrender.com"],
   },
 });
