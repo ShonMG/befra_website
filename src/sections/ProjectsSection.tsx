@@ -1,24 +1,18 @@
 import { motion } from "framer-motion";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import geothermalPipes from "@/assets/geothermal-pipes.png";
+import { Box, Container, Grid, Typography, Card, CardMedia, CardContent, Chip, Button } from "@mui/material";
+import { Link } from "wouter";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import geothermalPipes from "@/assets/projects.png";
+import { PROJECTS } from "@/data/projects";
 
-const PROJECTS = [
-  { client: "UNHCR",              date: "Aug 2012 – Present",    value: "$269,400", desc: "AC maintenance contract across Kakuma, Dadaab, Nairobi, and Alinjugur camps." },
-  { client: "IOM",                date: "Jan 2003 – Feb 2017",   value: "$286,900", desc: "Comprehensive AC maintenance contract for Kakuma, Dadaab, and Nairobi facilities." },
-  { client: "OR-Power 4 Inc",     date: "Aug 2012 – Present",    value: "$184,900", desc: "Heavy fabrication & maintenance at Olkaria Geothermal Power Plant, Naivasha." },
-  { client: "UNON",   date: "Sep 2010 – Dec 2013", value: "$28,031", desc: "General cleaning of condensers & evaporators,Adjusting duct diffusers, additional of gases,Replacement of liquid line filter driers, replacement of worn out insulations, adjusting pressure switch, calibration of control panel and expansion valves, Nairobi"},
-  { client: "Care International", date: "Aug 2014 – Dec 2015", value: "$14,600", desc: "General cleaning of indoor & outdoor unit, gas topping, sealing of leakages, replacement of worn out insulations, replacement of faulty parts, adjusting control panel and giving quality control statements, Daadab"},
-  { client: "MP Shah Hospital",   date: "Nov 2006 – Aug 2014",   value: "$19,801",  desc: "Critical mechanical works including ventilation, kitchen equipment, water pumps, and AC." },
-  { client: "Kirinyaga County Govt", date: "August 2022",        value: "$56,250",  desc: "Construction & solar-powered thermos egg cooling system for Kiaga Poultry Farmers Society." },
-  { client: "Nazareth Hospital",  date: "Nov 2006 – Present",    value: "$96,000",  desc: "Kitchen cold stores refurbishment, laundry equipment, and generator installation in Limuru & Ruiru." },
-  { client: "Family Health International (FIH)", date: "Nov 2006 – July 2011", value: "$3,960", desc: "General cleaning of indoor & outdoor unit, gas topping, sealing of leakages, replacement of worn out insulations, replacement of faulty parts, adjusting control panel and giving quality control statements, Nakuru & Nairobi"},
-  { client: "Vincetian Retreat Centre", date: "2019 – Present", value: "$10,750", desc: " Installation of 15Kw solar system, Repairs & Maintenance of generators, electrical installation and Borehole water pumps maintenance, Thika & Lavington"},
-];
+const FEATURED_COUNT = 6;
 
 export function ProjectsSection() {
+  const featured = PROJECTS.slice(0, FEATURED_COUNT);
+
   return (
-    <Box id="projects" sx={{ py: 12, bgcolor: "secondary.main", color: "white", position: "relative" }}>
-      <Box sx={{ position: "absolute", inset: 0, opacity: 0.1 }}>
+    <Box sx={{ py: 12, bgcolor: "secondary.main", color: "white", position: "relative" }}>
+      <Box sx={{ position: "absolute", inset: 0, opacity: 0.15 }}>
         <img src={geothermalPipes} alt="Background Pipes" className="w-full h-full object-cover grayscale" />
       </Box>
       <Container sx={{ position: "relative", zIndex: 10 }}>
@@ -32,25 +26,87 @@ export function ProjectsSection() {
         </Box>
 
         <Grid container spacing={4}>
-          {PROJECTS.map((project, i) => (
-            <Grid size={{ xs: 12, md: 6 }} key={i}>
+          {featured.map((project, i) => (
+            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={project.client}>
               <motion.div
-                initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="border-t border-white/10 pt-6"
+                transition={{ delay: (i % 3) * 0.1 }}
+                style={{ height: "100%" }}
               >
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}>
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>{project.client}</Typography>
-                  <Typography sx={{ color: "primary.main", fontFamily: "monospace", fontSize: "0.875rem" }}>{project.value}</Typography>
-                </Box>
-                <Typography sx={{ color: "rgba(255,255,255,0.6)", fontSize: "0.875rem", mb: 1.5 }}>{project.date}</Typography>
-                <Typography sx={{ color: "rgba(255,255,255,0.8)" }}>{project.desc}</Typography>
+                <Card
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    bgcolor: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    transition: "transform 0.25s ease, border-color 0.25s ease",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      borderColor: "rgba(255,255,255,0.25)",
+                    },
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    image={project.image}
+                    alt={project.client}
+                    sx={{ height: 200, objectFit: "cover" }}
+                  />
+                  <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column", p: 3 }}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, gap: 1 }}>
+                      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                        {project.client}
+                      </Typography>
+                      <Chip
+                        label={project.value}
+                        size="small"
+                        sx={{
+                          bgcolor: "rgba(0,0,0,0.3)",
+                          color: "primary.main",
+                          fontFamily: "monospace",
+                          fontWeight: 600,
+                        }}
+                      />
+                    </Box>
+                    <Typography sx={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8rem", mb: 1.5 }}>
+                      {project.date}
+                    </Typography>
+                    <Typography sx={{ color: "rgba(255,255,255,0.8)", fontSize: "0.9rem", lineHeight: 1.6 }}>
+                      {project.desc}
+                    </Typography>
+                  </CardContent>
+                </Card>
               </motion.div>
             </Grid>
           ))}
         </Grid>
+
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+          <Link href="/projects">
+            <Button
+              variant="outlined"
+              size="large"
+              endIcon={<ArrowForwardIcon />}
+              sx={{
+                color: "white",
+                borderColor: "rgba(255,255,255,0.4)",
+                px: 4,
+                py: 1.5,
+                "&:hover": {
+                  borderColor: "primary.main",
+                  bgcolor: "rgba(255,255,255,0.05)",
+                },
+              }}
+            >
+              View All Projects
+            </Button>
+          </Link>
+        </Box>
       </Container>
     </Box>
   );

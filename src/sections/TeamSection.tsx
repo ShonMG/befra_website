@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import { VerifiedUser as ShieldCheck } from "@mui/icons-material";
 import { Box, Container, Grid, Typography } from "@mui/material";
+import director from "@/assets/director.png";
 
 const DIRECTOR = {
   name: "Benard Gichuki",
   role: "Director",
   specialty: "25+ years leading HVAC & industrial engineering projects Kenya, from geothermal power plants to UN refugee camp cold chains.",
-  photo: "",
+  photo: director,
 };
 
 const POLICIES = [
@@ -64,10 +65,10 @@ export function TeamSection() {
                     borderColor: "divider",
                   }}
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = ""; }}
-                />
-                {/* Blue accent corner */}
+                /> 
+                
                 <Box sx={{ position: "absolute", bottom: -12, right: -12, width: 80, height: 80, bgcolor: "primary.main", zIndex: -1 }} />
-              </Box>
+              </Box> 
             </motion.div>
           </Grid>
 

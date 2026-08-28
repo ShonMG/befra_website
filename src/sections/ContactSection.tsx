@@ -44,15 +44,20 @@ export function ContactSection() {
     setStatus("loading");
     setErrorMsg("");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("https://formspree.io/f/mqeovlnb", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify(form),
       });
-      const data = await res.json() as { success?: boolean; error?: string };
-      if (!res.ok || !data.success) {
-        throw new Error(data.error ?? "Submission failed. Please try again.");
+
+      if (!res.ok) {
+        const data = await res.json() as { errors?: { message: string }[] };
+        throw new Error(data.errors?.[0]?.message ?? "Submission failed. Please try again.");
       }
+
       setStatus("success");
       setForm(EMPTY_FORM);
     } catch (err) {
@@ -60,9 +65,8 @@ export function ContactSection() {
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong.");
     }
   };
-
   return (
-    <Box id="contact" sx={{ py: 12, bgcolor: "background.default" }}>
+    <Box  sx={{ py: 12, bgcolor: "background.default" }}>
       <Container>
         <motion.div
           initial="hidden"
@@ -120,7 +124,7 @@ export function ContactSection() {
                       sx={{ fontSize: "0.875rem", fontWeight: 600, color: "text.primary", textDecoration: "none", wordBreak: "break-word",  overflowWrap: "anywhere",  display: "block",  "&:hover": { color: "primary.main" } }}
                       data-testid="link-email"
                     >
-                      befraeng.services@gmail.com
+                      info@befraengineering.com
                     </Typography>
                   </Box>
                 </Grid>
@@ -128,7 +132,7 @@ export function ContactSection() {
                   <Box sx={{ p: 2, border: "1px solid", borderColor: "divider", bgcolor: "rgba(0,0,0,0.02)", height: "100%" }}>
                     <Phone sx={{ color: "primary.main", mb: 1 }} />
                     <Typography sx={{ fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", color: "text.secondary", mb: 0.5 }}>Office Line</Typography>
-                    <Typography sx={{ fontSize: "0.875rem", fontWeight: 600 }}>0721409324</Typography>
+                    <Typography sx={{ fontSize: "0.875rem", fontWeight: 600 }}>0721409342</Typography>
                   </Box>
                 </Grid>
               </Grid>

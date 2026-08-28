@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
+
+
 // 💡 Fallback options so it runs cleanly without needing complex environment setups
 const port = Number(process.env.PORT) || 5173;
 const basePath = process.env.BASE_PATH || "/";
@@ -11,7 +13,7 @@ export default defineConfig({
   base: basePath,
   plugins: [
     react(),
-    tailwindcss()
+    tailwindcss(), 
   ],
   resolve: {
     alias: {

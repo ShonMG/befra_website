@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Link, useLocation } from "wouter";
 import logo from "@/assets/logo-removebg.png";
 import {
-  Public as Globe2,
   LocationOn as MapPin,
   Email as Mail,
   Menu as MenuIcon,
@@ -14,17 +14,17 @@ import {
 } from "@mui/material";
 
 const NAV_LINKS = [
-  { label: "About",    href: "#about",    id: "about",    testId: "link-nav-about" },
-  { label: "Services", href: "#services", id: "services", testId: "link-nav-services" },
-  { label: "Projects", href: "#projects", id: "projects", testId: "link-nav-projects" },
-  { label: "Contact",  href: "#contact",  id: "contact",  testId: "link-nav-contact" },
+  { label: "About",    to: "/about",    testId: "link-nav-about" },
+  { label: "Services", to: "/services", testId: "link-nav-services" },
+  { label: "Products", to: "/products", testId: "link-nav-products" },
+  { label: "Projects", to: "/projects", testId: "link-nav-projects" },
+  { label: "Contact",  to: "/contact",  testId: "link-nav-contact" },
+  { label: "Blog", to: "/blog" },
+
 ];
 
-interface NavbarProps {
-  activeSection: string;
-}
-
-export function Navbar({ activeSection }: NavbarProps) {
+export function Navbar() {
+  const [location] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
 
@@ -38,7 +38,7 @@ export function Navbar({ activeSection }: NavbarProps) {
     <>
       <motion.div
         animate={{
-          backgroundColor: navScrolled ? "rgba(255,255,255,0.97)" : "rgba(255,255,255,0)",
+          backgroundColor: "rgba(255,255,255,0.97)",
           boxShadow: navScrolled ? "0 1px 16px rgba(0,0,0,0.08)" : "none",
         }}
         transition={{ duration: 0.3 }}
@@ -56,31 +56,33 @@ export function Navbar({ activeSection }: NavbarProps) {
           }}
         >
           <Toolbar sx={{ justifyContent: "space-between", height: 80, px: { xs: 2, md: 6 } }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Box
-                component="img"
-                src={logo}
-                alt="BEFRA logo"
-                sx={{ width: 100, height: 100, objectFit: "contain" }}
-              />
-              <Box>
-                <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.1, color: "text.primary" }}>BEFRA</Typography>
-                <Typography sx={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: 2, color: "text.secondary", fontWeight: 600 }}>Engineering Services Limited</Typography>
+            <Link href="/" style={{ textDecoration: "none" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2, cursor: "pointer" }}>
+                <Box
+                  component="img"
+                  src={logo}
+                  alt="BEFRA logo"
+                  sx={{ width: 100, height: 100, objectFit: "contain" }}
+                />
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.1, color: "text.primary" }}>BEFRA</Typography>
+                  <Typography sx={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: 2, color: "text.secondary", fontWeight: 600 }}>Engineering Services Limited</Typography>
+                </Box>
               </Box>
-            </Box>
+            </Link>
 
-            <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 4 }}>
+            <Box sx={{ display: { xs: "none", lg: "flex" }, alignItems: "center", gap: 4 }}>
               {NAV_LINKS.map(link => {
-                const isActive = activeSection === link.id;
+                const isActive = location === link.to;
                 return (
-                  <Box key={link.href} sx={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <a
-                      href={link.href}
+                  <Box key={link.to} sx={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <Link
+                      href={link.to}
                       style={{ textDecoration: "none", color: isActive ? "#1565C0" : "#1a1c24", fontWeight: isActive ? 700 : 500, transition: "color 0.2s" }}
                       data-testid={link.testId}
                     >
                       {link.label}
-                    </a>
+                    </Link>
                     <motion.div
                       animate={{ scaleX: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
                       transition={{ duration: 0.25 }}
@@ -89,14 +91,14 @@ export function Navbar({ activeSection }: NavbarProps) {
                   </Box>
                 );
               })}
-              <Button href="#contact" variant="contained" color="primary" sx={{ px: 3, py: 1 }} data-testid="button-nav-quote">
+              <Button component={Link} href="/contact" variant="contained" color="primary" sx={{ px: 3, py: 1 }} data-testid="button-nav-quote">
                 Request Quote
               </Button>
             </Box>
 
             <IconButton
               onClick={() => setMobileOpen(true)}
-              sx={{ display: { xs: "flex", md: "none" }, color: "text.primary" }}
+              sx={{ display: { xs: "flex", lg: "none" }, color: "text.primary" }}
               aria-label="Open navigation menu"
               data-testid="button-mobile-menu"
             >
@@ -127,18 +129,18 @@ export function Navbar({ activeSection }: NavbarProps) {
 
         <List sx={{ px: 1, py: 2, flexGrow: 1 }}>
           {NAV_LINKS.map((link, i) => {
-            const isActive = activeSection === link.id;
+            const isActive = location === link.to;
             return (
               <motion.div
-                key={link.href}
+                key={link.to}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.06, duration: 0.3 }}
               >
                 <ListItem disablePadding>
                   <ListItemButton
-                    component="a"
-                    href={link.href}
+                    component={Link}
+                    href={link.to}
                     onClick={() => setMobileOpen(false)}
                     sx={{
                       py: 1.5, px: 2, borderRadius: 1,
@@ -163,7 +165,8 @@ export function Navbar({ activeSection }: NavbarProps) {
         <Divider />
         <Box sx={{ p: 3 }}>
           <Button
-            href="#contact"
+            component={Link}
+            href="/contact"
             variant="contained"
             color="primary"
             fullWidth
@@ -181,12 +184,8 @@ export function Navbar({ activeSection }: NavbarProps) {
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
               <Mail fontSize="small" sx={{ color: "primary.main" }} />
-              <Typography variant="body2" color="text.secondary">befraeng.services@gmail.com</Typography>
+              <Typography variant="body2" color="text.secondary">info@befraengineering.com</Typography>
             </Box>
-            {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              <Globe2 fontSize="small" sx={{ color: "primary.main" }} />
-              <Typography variant="body2" color="text.secondary">UNGM No. 362091</Typography>
-            </Box> */}
           </Box>
         </Box>
       </Drawer>
